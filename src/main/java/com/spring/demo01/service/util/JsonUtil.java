@@ -7,16 +7,17 @@ import org.json.JSONObject;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 
 public class JsonUtil {
 
 
-  public static <T> T jsonToBean(JSONObject jsonObject, Class<T> clazz)  {
+  public static <T> T jsonToBean(JSONObject jsonObject, Class<T> clazz) throws IllegalAccessException, InstantiationException, IntrospectionException, InvocationTargetException {
 
       Field[] fields = clazz.getDeclaredFields();
-
+      T t = clazz.newInstance();
 
       // 首先遍历 JSONObject
       while (jsonObject.keys().hasNext()){
@@ -26,8 +27,13 @@ public class JsonUtil {
           // key 为基本数据类型
           if(value.getClass().isPrimitive()){
               for( int i = 0; i < fields.length;i++){
-                 if (key.equals(fields[i].getAnnotation(DemoEnum1.class).value()))
+                 if (key.equals(fields[i].getAnnotation(DemoEnum1.class).value())){
+                     PropertyDescriptor pd = new PropertyDescriptor(fields[i].getName(), clazz);
+                     Method pdWriteMethod = pd.getWriteMethod();
+                     pdWriteMethod.invoke(t,value);
+
                      break;
+                 }
               }
 
 
