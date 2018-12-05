@@ -1,5 +1,7 @@
 package com.spring.demo01.service.util;
 
+import com.spring.demo01.domain.DemoEnum.DemoEnum1;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.beans.IntrospectionException;
@@ -11,8 +13,39 @@ import java.lang.reflect.Method;
 public class JsonUtil {
 
 
-   /* public static <T> T jsonToBean(JSONObject jsonObject, Class<T> cla) throws ReflectiveOperationException, IllegalArgumentException, IntrospectionException {
-        if(jsonObject == null || jsonObject.isEmpty())
+  public static <T> T jsonToBean(JSONObject jsonObject, Class<T> clazz)  {
+
+      Field[] fields = clazz.getDeclaredFields();
+
+
+      // 首先遍历 JSONObject
+      while (jsonObject.keys().hasNext()){
+          String key = (String)jsonObject.keys().next();
+          Object value = jsonObject.get(key);
+
+          // key 为基本数据类型
+          if(value.getClass().isPrimitive()){
+              for( int i = 0; i < fields.length;i++){
+                 if (key.equals(fields[i].getAnnotation(DemoEnum1.class).value()))
+                     break;
+              }
+
+
+          }else if(value.getClass().equals(String.class)){        //  key 为String类型
+
+          }else if(value.getClass().equals(JSONObject.class)){    //  key 为 Bean 类型
+
+          }else if(value.getClass().equals(JSONArray.class)){     // key 为 Array类型
+
+          }
+
+
+
+      }
+
+
+      /*
+      if(jsonObject == null || jsonObject.isEmpty())
             return null;
 
         T t = cla.newInstance();
@@ -50,9 +83,9 @@ public class JsonUtil {
                     }
                 }
             }
-        }
-        return t;
+        }*/
+
+        return null;
     }
-*/
 
 }

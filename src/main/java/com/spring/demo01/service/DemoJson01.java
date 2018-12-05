@@ -11,10 +11,9 @@ public class DemoJson01{
 
         JSONObject jsonObject = new JSONObject(json1);
 
-        Object jsonObject2 = jsonObject.get("name");
+        Object jsonObject2 = jsonObject.get("age");
 
        boolean primitive = jsonObject2.getClass().equals(String.class);
-
 
         return;
 
