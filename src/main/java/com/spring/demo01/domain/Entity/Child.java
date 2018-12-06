@@ -3,8 +3,13 @@ package com.spring.demo01.domain.Entity;
 import com.spring.demo01.domain.DemoEnum.DemoEnum1;
 
 public class Child {
-    @DemoEnum1("name") private String name;
-    @DemoEnum1("age") private Integer age;
+    @DemoEnum1("Name") private String name;
+    @DemoEnum1("Age") private int age;
+
+    @Override
+    public String toString() {
+        return String.format("name is %s, and age is %d",this.name, this.age);
+    }
 
     public Child() {
     }
@@ -22,11 +27,12 @@ public class Child {
         this.name = name;
     }
 
-    public Integer getAge() {
+
+    public int getAge() {
         return age;
     }
 
-    public void setAge(Integer age) {
+    public void setAge(int age) {
         this.age = age;
     }
 }

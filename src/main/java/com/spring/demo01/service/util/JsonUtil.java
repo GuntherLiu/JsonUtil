@@ -3,12 +3,12 @@ package com.spring.demo01.service.util;
 import com.spring.demo01.domain.DemoEnum.DemoEnum1;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Iterator;
 
 
 public class JsonUtil {
@@ -18,37 +18,62 @@ public class JsonUtil {
 
       Field[] fields = clazz.getDeclaredFields();
       T t = clazz.newInstance();
+      Iterator<String> keys = jsonObject.keys();
 
       // 首先遍历 JSONObject
-      while (jsonObject.keys().hasNext()){
-          String key = (String)jsonObject.keys().next();
+      while (keys.hasNext()){
+          String key = keys.next();
           Object value = jsonObject.get(key);
 
-          // key 为基本数据类型
-          if(value.getClass().isPrimitive()){
+          // value 为基本数据类型, 或者String类型
+          if(isPrimitive(value.getClass()) || value.getClass().equals(String.class)){
+              // 遍历bean的所有字段
               for( int i = 0; i < fields.length;i++){
                  if (key.equals(fields[i].getAnnotation(DemoEnum1.class).value())){
                      PropertyDescriptor pd = new PropertyDescriptor(fields[i].getName(), clazz);
                      Method pdWriteMethod = pd.getWriteMethod();
                      pdWriteMethod.invoke(t,value);
-
                      break;
                  }
               }
+          }else if(value.getClass().equals(JSONObject.class)){    //  value 为 Bean 类型
+              for( int i = 0; i < fields.length;i++){
+                  if (key.equals(fields[i].getAnnotation(DemoEnum1.class).value())){
+                      Class<?> fieldClass = fields[i].getType();
+                      Object fieldObj = jsonToBean((JSONObject) value, fieldClass);
+                      PropertyDescriptor pd = new PropertyDescriptor(fields[i].getName(), clazz);
+                      Method pdWriteMethod = pd.getWriteMethod();
+                      pdWriteMethod.invoke(t,fieldObj);
+                      break;
+                  }
+              }
+
+          }else if(value.getClass().equals(JSONArray.class)){     // value 为 Array类型
+              for( int i = 0; i < fields.length;i++){
+                  if (key.equals(fields[i].getAnnotation(DemoEnum1.class).value())){
+                      JSONArray array = (JSONArray) value;
+                      Iterator<Object> objs = array.iterator();
+                      while (objs.hasNext()){
 
 
-          }else if(value.getClass().equals(String.class)){        //  key 为String类型
+                      }
 
-          }else if(value.getClass().equals(JSONObject.class)){    //  key 为 Bean 类型
 
-          }else if(value.getClass().equals(JSONArray.class)){     // key 为 Array类型
+
+                      Class<?> fieldClass = fields[i].getType();
+                      Object fieldObj = jsonToBean((JSONObject) value, fieldClass);
+                      PropertyDescriptor pd = new PropertyDescriptor(fields[i].getName(), clazz);
+                      Method pdWriteMethod = pd.getWriteMethod();
+                      pdWriteMethod.invoke(t,fieldObj);
+                      break;
+                  }
+              }
+
+
 
           }
-
-
-
       }
-
+      return t;
 
       /*
       if(jsonObject == null || jsonObject.isEmpty())
@@ -91,7 +116,18 @@ public class JsonUtil {
             }
         }*/
 
-        return null;
+
     }
+
+    // 判断是否为基本数据类型，或者是基本数据类型包装类型
+    public static boolean isPrimitive(Class clazz){
+        if(clazz.equals(Integer.class) || clazz.equals(Float.class) || clazz.equals(Long.class) || clazz.equals(Short.class)
+                || clazz.equals(Byte.class) || clazz.equals(Character.class) || clazz.equals(Double.class) || clazz.equals(Boolean.class))
+            return true;
+        return false;
+
+    }
+
+
 
 }
