@@ -5,10 +5,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 
 public class JsonUtil {
@@ -52,69 +53,57 @@ public class JsonUtil {
               for( int i = 0; i < fields.length;i++){
                   if (key.equals(fields[i].getAnnotation(DemoEnum1.class).value())){
                       JSONArray array = (JSONArray) value;
-                      Iterator<Object> objs = array.iterator();
-                      while (objs.hasNext()){
 
+                      List<Object> fieldObj = new ArrayList<Object>();
+                      Type genericType = fields[i].getGenericType();
+                      Class<?> actualType = null;
 
+                      if (genericType instanceof ParameterizedType) {
+                          ParameterizedType paGenericType = (ParameterizedType)genericType;
+                          Type[] actualTypeArguments = paGenericType.getActualTypeArguments();
+                          actualType = (Class<?>) actualTypeArguments[0];
+
+                          if(actualType.equals(Integer.class)){
+                              for (int j =0; j < array.length(); j++) {
+                                  fieldObj.add(array.getInt(j));
+                              }
+                          }else if(actualType.equals(Long.class)){
+                              for (int j =0; j < array.length(); j++) {
+                                  fieldObj.add(array.getLong(j));
+                              }
+                          }else if(actualType.equals(Boolean.class)){
+                              for (int j =0; j < array.length(); j++) {
+                                  fieldObj.add(array.getBoolean(j));
+                              }
+                          }else if(actualType.equals(Float.class)){
+                              for (int j =0; j < array.length(); j++) {
+                                  fieldObj.add(array.getFloat(j));
+                              }
+                          }else if(actualType.equals(Double.class)){
+                              for (int j =0; j < array.length(); j++) {
+                                  fieldObj.add(array.getDouble(j));
+                              }
+                          }else if(actualType.equals(String.class)){
+                              for (int j =0; j < array.length(); j++) {
+                                  fieldObj.add(array.getString(j));
+                              }
+                          }else{
+                              for (int j =0; j < array.length(); j++) {
+                                  fieldObj.add(jsonToBean((JSONObject) array.getJSONObject(j),actualType));
+                              }
+                          }
                       }
 
-
-
-                      Class<?> fieldClass = fields[i].getType();
-                      Object fieldObj = jsonToBean((JSONObject) value, fieldClass);
                       PropertyDescriptor pd = new PropertyDescriptor(fields[i].getName(), clazz);
                       Method pdWriteMethod = pd.getWriteMethod();
                       pdWriteMethod.invoke(t,fieldObj);
                       break;
                   }
               }
-
-
-
           }
       }
       return t;
 
-      /*
-      if(jsonObject == null || jsonObject.isEmpty())
-            return null;
-
-        T t = cla.newInstance();
-        Field[] fields = cla.getDeclaredFields();
-
-        for (Field field : fields) {
-            String fieldName = field.getName();
-
-
-            JsonElement je = getValueByPath(jsonObject, fieldName);
-
-
-            if (je != null && !je.isJsonNull()) {
-                PropertyDescriptor pd = new PropertyDescriptor(fieldName, cla);
-
-                Method method = pd.getWriteMethod();
-                if (method != null) {
-                    Class<?> fieldType = field.getType();
-
-                    if (fieldType.isPrimitive()) {
-                        // 如果是基本类型或是其封装类型
-                        method.invoke(t, toPrimitive(je, fieldType));
-                    } else if (fieldType.isEnum()) {
-                        // 如果是枚举类型
-                    } else if (fieldType.isArray()) {
-                        // 如果是数组
-                    } else if (Collection.class.isAssignableFrom(fieldType) && je.isJsonArray()) {
-                        // 如果是Collection数组
-                        ParameterizedType type = (ParameterizedType) field.getGenericType();
-                        method.invoke(t, toCollection(je.getAsJsonArray(), (Class<?>) type.getActualTypeArguments()[0]));
-                    } else if (fieldType.isInterface() || fieldType.isAnnotation() || fieldType.isAnonymousClass() || fieldType.isMemberClass() || fieldType.isLocalClass()) {
-                        // 如果是 接口 或者是 注解 或者是 匿名类 或者是成员类 局部类
-                    } else if (je.isJsonObject()) {
-                        method.invoke(t, toBean(je.getAsJsonObject(), fieldType));
-                    }
-                }
-            }
-        }*/
 
 
     }

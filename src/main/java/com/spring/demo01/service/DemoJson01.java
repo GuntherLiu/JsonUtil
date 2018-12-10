@@ -13,9 +13,13 @@ public class DemoJson01{
         String json1 = "{\"Name\":\"joey\",\"Age\":30, \"Child\":{ \"Name\":\"Tom\",\"Age\":10}, \"Homes\":[\"beijing\",\"shanghai\"]}";
         String json2 = "{\"Name\":\"Rachel\",\"Age\":28}";
         String json3 = "{\"Name\":\"joey\",\"Age\":30, \"Child\":{ \"Name\":\"Tom\",\"Age\":10}}";
-        JSONObject jsonObject = new JSONObject(json1);
 
+        String json4 = "{\"Name\":\"joey\",\"Age\":30, \"Child\":{ \"Name\":\"Tom\",\"Age\":10}, \"Homes\":[\"beijing\",\"shanghai\"], \"Pets\":[{" +
+                "\"Name\":\"Ted\",\"Age\":2},{\"Name\":\"Joey\",\"Age\":3}]}";
 
+        String json5 = "{\"Friends\":[{\"Name\":\"Ted\",\"Age\":32},{\"Name\":\"Joey\",\"Age\":33}]}";
+
+        JSONObject jsonObject = new JSONObject(json4);
 
 
         Person obj = JsonUtil.jsonToBean(jsonObject, Person.class);

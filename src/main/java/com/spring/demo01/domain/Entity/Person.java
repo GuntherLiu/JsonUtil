@@ -2,19 +2,30 @@ package com.spring.demo01.domain.Entity;
 
 import com.spring.demo01.domain.DemoEnum.DemoEnum1;
 
+import java.util.List;
+
 
 public class Person {
     @DemoEnum1("Name") private String name;
     @DemoEnum1("Age") private Integer age;
     @DemoEnum1("Child") private Child child;
-    @DemoEnum1("Homes") private String[] homes;
+    @DemoEnum1("Homes") private List<String> homes;
+    @DemoEnum1("Pets") private List<Pet> pets;
 
 
-    public String[] getHomes() {
+    public List<Pet> getPets() {
+        return pets;
+    }
+
+    public void setPets(List<Pet> pets) {
+        this.pets = pets;
+    }
+
+    public List<String> getHomes() {
         return homes;
     }
 
-    public void setHomes(String[] homes) {
+    public void setHomes(List<String> homes) {
         this.homes = homes;
     }
 
