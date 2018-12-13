@@ -6,10 +6,10 @@ import com.spring.demo01.domain.Entity.Person;
 import com.spring.demo01.service.util.JsonUtil;
 import org.json.JSONObject;
 
-public class DemoJson01{
+public class DemoJson01 {
 
 
-    public static void testJson1() throws Exception{
+    public static void testJson1() throws Exception {
         String json1 = "{\"Name\":\"joey\",\"Age\":30, \"Child\":{ \"Name\":\"Tom\",\"Age\":10}, \"Homes\":[\"beijing\",\"shanghai\"]}";
         String json2 = "{\"Name\":\"Rachel\",\"Age\":28}";
         String json3 = "{\"Name\":\"joey\",\"Age\":30, \"Child\":{ \"Name\":\"Tom\",\"Age\":10}}";
@@ -19,7 +19,9 @@ public class DemoJson01{
 
         String json5 = "{\"Friends\":[{\"Name\":\"Ted\",\"Age\":32},{\"Name\":\"Joey\",\"Age\":33}]}";
 
-        JSONObject jsonObject = new JSONObject(json4);
+        String json6 = JsonUtil.getJsonByFile("file1.json");
+
+        JSONObject jsonObject = new JSONObject(json6);
 
 
         Person obj = JsonUtil.jsonToBean(jsonObject, Person.class);
@@ -31,7 +33,7 @@ public class DemoJson01{
 
     }
 
-    public  static void test() throws Exception{
+    public static void test() throws Exception {
         String json2 = "{\"Name\":\"Rachel\",\"Age\":28}";
         JSONObject jsonObject = new JSONObject(json2);
         Object age = jsonObject.get("Age");
@@ -44,8 +46,7 @@ public class DemoJson01{
     }
 
 
-
-    public  static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
         testJson1();
 //        test();
     }

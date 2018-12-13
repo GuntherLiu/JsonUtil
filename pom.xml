@@ -46,8 +46,13 @@
 			<artifactId>json</artifactId>
 			<version>20180813</version>
 		</dependency>
+        <dependency>
+            <groupId>org.clojure</groupId>
+            <artifactId>clojure</artifactId>
+            <version>RELEASE</version>
+        </dependency>
 
-	</dependencies>
+    </dependencies>
 
 	<build>
 		<plugins>

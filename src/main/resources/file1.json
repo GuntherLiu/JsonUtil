@@ -1,0 +1,22 @@
+{
+  "Name": "joey",
+  "Age": 30,
+  "Child": {
+    "Name": "Tom",
+    "Age": 10
+  },
+  "Homes": [
+    "beijing",
+    "shanghai"
+  ],
+  "Pets": [
+    {
+      "Name": "Ted",
+      "Age": 2
+    },
+    {
+      "Name": "Joey",
+      "Age": 3
+    }
+  ]
+}
