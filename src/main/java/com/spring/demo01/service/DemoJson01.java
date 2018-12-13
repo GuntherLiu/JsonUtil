@@ -26,8 +26,6 @@ public class DemoJson01{
 
 //        System.out.println(obj);
 
-
-
         return;
 
 

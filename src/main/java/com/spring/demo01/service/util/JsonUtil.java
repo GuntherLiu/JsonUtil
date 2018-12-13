@@ -7,7 +7,6 @@ import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -63,29 +62,9 @@ public class JsonUtil {
                           Type[] actualTypeArguments = paGenericType.getActualTypeArguments();
                           actualType = (Class<?>) actualTypeArguments[0];
 
-                          if(actualType.equals(Integer.class)){
+                          if(isPrimitive(actualType) || actualType.equals(String.class)){
                               for (int j =0; j < array.length(); j++) {
-                                  fieldObj.add(array.getInt(j));
-                              }
-                          }else if(actualType.equals(Long.class)){
-                              for (int j =0; j < array.length(); j++) {
-                                  fieldObj.add(array.getLong(j));
-                              }
-                          }else if(actualType.equals(Boolean.class)){
-                              for (int j =0; j < array.length(); j++) {
-                                  fieldObj.add(array.getBoolean(j));
-                              }
-                          }else if(actualType.equals(Float.class)){
-                              for (int j =0; j < array.length(); j++) {
-                                  fieldObj.add(array.getFloat(j));
-                              }
-                          }else if(actualType.equals(Double.class)){
-                              for (int j =0; j < array.length(); j++) {
-                                  fieldObj.add(array.getDouble(j));
-                              }
-                          }else if(actualType.equals(String.class)){
-                              for (int j =0; j < array.length(); j++) {
-                                  fieldObj.add(array.getString(j));
+                                  fieldObj.add(array.get(j));
                               }
                           }else{
                               for (int j =0; j < array.length(); j++) {
@@ -104,8 +83,6 @@ public class JsonUtil {
       }
       return t;
 
-
-
     }
 
     // 判断是否为基本数据类型，或者是基本数据类型包装类型
@@ -116,7 +93,5 @@ public class JsonUtil {
         return false;
 
     }
-
-
 
 }
